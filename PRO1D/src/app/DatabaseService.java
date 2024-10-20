@@ -2,7 +2,7 @@ package app;
 
 import java.sql.*;
 
-public class DataService {
+public class DatabaseService {
     public static Connection open(UrlAndCredentials urlAndCredentials) {
         String databaseUrl = "jdbc:postgresql://" + urlAndCredentials.hostname() +
                 ":" + urlAndCredentials.port() + "/"
