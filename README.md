@@ -16,8 +16,8 @@ You will need the latest release of Java as well as a local or remote [PostgreSQ
 
     and fill out the database connection info and credentials in this format:
     ```properties
-    database=<database name>
-    host=<hostname>
+    dbname=<database name>
+    hostname=<hostname>
     port=<port>
     username=<username>
     password=<password>
