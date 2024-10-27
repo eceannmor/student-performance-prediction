@@ -10,7 +10,11 @@ You will need the latest release of Java as well as a local or remote [PostgreSQ
     git clone https://github.com/PROJ-D-2024/Tutor2_s28021.git
     ```
 * Run a [PostgreSQL database instance](https://www.postgresql.org/) to use as the final storage for the data.
-* Copy `sample_config` as `database.cfg` into `/src`, and fill out the database connection info and credentials in this format:
+* Copy `sample_config` as `database.cfg` into `/src`:
+    * Windows: `copy sample_config.cfg ./PRO1D/scr/database.cfg -a`
+    * Linux: `cp sample_config.cfg ./PRO1D/src/database.cfg`
+
+    and fill out the database connection info and credentials in this format:
     ```properties
     database=<database name>
     host=<hostname>
