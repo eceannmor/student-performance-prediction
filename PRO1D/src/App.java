@@ -3,7 +3,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.*;
 
-import app.DataCleanupService;
 import app.DatabaseService;
 import app.UrlAndCredentials;
 
@@ -13,7 +12,7 @@ public class App {
 
         /*
             Replacing dictionary values with numeric ones to make comparing groups of stats easier
-            {No, Yes}                       ->  {0, 1}
+            {No, Yes}                       -> {0, 1}
             {Low, Medium, High}             -> {-1, 0, 1}
             {Negative, Neutral, Positive}   -> {-1, 0, 1}
             {Far, Moderate, Near}           -> {-1, 0, 1}
