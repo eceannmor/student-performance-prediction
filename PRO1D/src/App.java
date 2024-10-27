@@ -46,17 +46,17 @@ public class App {
             Statement statement = c.createStatement();
             
             // CREATE TABLE script
-            String createTable = new String(Files.readAllBytes(Paths.get("data\\schema.sql")), StandardCharsets.UTF_8);
+            String createTable = new String(Files.readAllBytes(Paths.get("./data/schema.sql")), StandardCharsets.UTF_8);
             statement.executeUpdate(createTable);
             
             // COPY FROM CSV script
             String dataImport = "COPY StudentPerformanceFactors(HoursStudied,Attendance,ParentalInvolvement,AccessToResources,ExtracurricularActivities,SleepHours,PreviousScores,MotivationLevel,InternetAccess,TutoringSessions,FamilyIncome,TeacherQuality,SchoolType,PeerInfluence,PhysicalActivity,LearningDisabilities,ParentalEducationLevel,DistanceFromHome,Gender,ExamScore)" +
-                    "FROM '" + System.getProperty("user.dir") + "\\data\\UpdatedSource.csv'" +
+                    "FROM '" + System.getProperty("user.dir") + "/data/UpdatedSource.csv'" +
                     "DELIMITER ',' CSV HEADER;";
             System.out.println(statement.executeUpdate(dataImport));
             
             // UPDATE WHERE IS NULL script
-            String removeNullValues = new String(Files.readAllBytes(Paths.get("data\\replaceNulls.sql")), StandardCharsets.UTF_8);
+            String removeNullValues = new String(Files.readAllBytes(Paths.get("./data/replaceNulls.sql")), StandardCharsets.UTF_8);
             System.out.println(statement.executeUpdate(removeNullValues));
 
         } catch (Exception e) {

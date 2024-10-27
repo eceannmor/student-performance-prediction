@@ -79,7 +79,7 @@ SET TeacherQuality = 0
 WHERE TeacherQuality IS NULL;
 
 -- SchoolType
-UPDATE StudentPerformanceFac
+UPDATE StudentPerformanceFactors
 SET SchoolType = (
     SELECT SchoolType
     FROM StudentPerformanceFactors
