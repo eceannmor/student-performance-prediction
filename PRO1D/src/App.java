@@ -51,7 +51,7 @@ public class App {
             Statement statement = c.createStatement();
 
             // CREATE TABLE script
-            String createTable = new String(Files.readAllBytes(Paths.get("data\\schema.sql")), StandardCharsets.UTF_8);
+            String createTable = new String(Files.readAllBytes(Paths.get("./data/schema.sql")), StandardCharsets.UTF_8);
             statement.executeUpdate(createTable);
 
             // COPY FROM CSV script
