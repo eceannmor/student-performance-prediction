@@ -52,7 +52,7 @@ public class App {
             // COPY FROM CSV script
             String dataImport = "COPY StudentPerformanceFactors(HoursStudied,Attendance,ParentalInvolvement,AccessToResources,ExtracurricularActivities,SleepHours,PreviousScores,MotivationLevel,InternetAccess,TutoringSessions,FamilyIncome,TeacherQuality,SchoolType,PeerInfluence,PhysicalActivity,LearningDisabilities,ParentalEducationLevel,DistanceFromHome,Gender,ExamScore)" +
                     "FROM '" + System.getProperty("user.dir") + "\\data\\UpdatedSource.csv'" +
-                    "DELIMITER ',' CSV HEADER;";
+                    "DELIMITER ',' CSV HEADER NULL AS 'null';";
             System.out.println(statement.executeUpdate(dataImport));
             
             // UPDATE WHERE IS NULL script
