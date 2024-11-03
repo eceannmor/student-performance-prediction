@@ -65,6 +65,11 @@ public class App {
                     StandardCharsets.UTF_8);
             System.out.println(statement.executeUpdate(removeNullValues));
 
+            // UPDATE standardisation script
+            String scaling = new String(Files.readAllBytes(Paths.get("data\\scaling.sql")),
+                    StandardCharsets.UTF_8);
+            System.out.println(statement.executeUpdate(scaling));
+
             // Sample use of the updated data
             ResultSet resultSet = statement.executeQuery("WITH tmp AS (\n" + //
                                 "\tSELECT \n" + //
