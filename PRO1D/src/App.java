@@ -7,6 +7,11 @@ import app.DatabaseService;
 import app.UrlAndCredentials;
 
 public class App {
+
+    public static final String OK     = "\u001B[32m[OK]\u001B[0m\t";
+    // public static final String WARN   = "\u001B[33m[Warn]\u001B[0m\t";  // unused
+    public static final String FATAL  = "\u001B[31m[Fatal]\u001B[0m\t";
+
     public static void main(String[] args) {
         /**** Data load and cleanup ****/
 
@@ -45,25 +50,33 @@ public class App {
 
         // Database connection
         UrlAndCredentials u = UrlAndCredentials.parse("database.cfg");
+        if (null == u) {
+            System.err.println(FATAL + "Database url and/or credentials failed to parse");
+            System.exit(1);
+        }
         Connection c = DatabaseService.open(u);
+        if (null == c) {
+            System.err.println(FATAL + "The connection could not be opened");
+            System.exit(1);
+        }
         // Inserting the edited source data into the database
         try {
             Statement statement = c.createStatement();
 
             // CREATE TABLE script
             String createTable = new String(Files.readAllBytes(Paths.get("./data/schema.sql")), StandardCharsets.UTF_8);
-            statement.executeUpdate(createTable);
+            System.out.println(OK + statement.executeUpdate(createTable));
 
             // COPY FROM CSV script
             String dataImport = "COPY StudentPerformanceFactors(HoursStudied,Attendance,ParentalInvolvement,AccessToResources,ExtracurricularActivities,SleepHours,PreviousScores,MotivationLevel,InternetAccess,TutoringSessions,FamilyIncome,TeacherQuality,SchoolType,PeerInfluence,PhysicalActivity,LearningDisabilities,ParentalEducationLevel,DistanceFromHome,Gender,ExamScore)"
                     + "FROM '" + System.getProperty("user.dir") + "\\data\\UpdatedSource.csv'" +
                     "DELIMITER ',' CSV HEADER NULL AS 'null';";
-            System.out.println(statement.executeUpdate(dataImport));
+            System.out.println(OK + statement.executeUpdate(dataImport));
 
             // UPDATE WHERE IS NULL script
             String removeNullValues = new String(Files.readAllBytes(Paths.get("data\\replaceNulls.sql")),
                     StandardCharsets.UTF_8);
-            System.out.println(statement.executeUpdate(removeNullValues));
+            System.out.println(OK + statement.executeUpdate(removeNullValues));
 
             // Sample use of the updated data
             ResultSet resultSet = statement.executeQuery("WITH tmp AS (\n" + //
@@ -102,7 +115,7 @@ public class App {
             resultSet.close();
             statement.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println(FATAL + e.toString());
         }
         DatabaseService.exitNicely(c);
     }
