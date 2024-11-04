@@ -81,37 +81,35 @@ public class App {
             // UPDATE standardisation script
             String scaling = new String(Files.readAllBytes(Paths.get("data\\scaling.sql")),
                     StandardCharsets.UTF_8);
-            System.out.println(statement.executeUpdate(scaling));
+            System.out.println(OK + statement.executeUpdate(scaling));
 
             // Sample use of the updated data
             ResultSet resultSet = statement.executeQuery("WITH tmp AS (\n" + //
                                 "\tSELECT \n" + //
                                 "\t\tGender,\n" + //
-                                "\t\tHoursStudied,\n" + //
-                                "\t\tAttendance,\n" + //
-                                "\t\tExamScore,\n" + //
-                                "\t\tParentalInvolvement + AccessToResources + InternetAccess + FamilyIncome + \n" + //
-                                "\t\tTeacherQuality + PeerInfluence + LearningDisabilities AS Bonus\n" + //
+                                "\t\tSchoolType,\n" + //
+                                "\t\tExamScoreMinMax,\n" + //
+                                "\t\tExamScoreZ,\n" + //
+                                "\t\tExamScore\n" + //
                                 "\tFROM StudentPerformanceFactors\n" + //
                                 ")\n" + //
                                 "\n" + //
                                 "SELECT \n" + //
                                 "\tGender,\n" + //
-                                "\tBonus,\n" + //
-                                "\tROUND(AVG(HoursStudied), 2) AS StudyHours,\n" + //
-                                "\tROUND(AVG(Attendance), 2) AS Attendance,\n" + //
-                                "\tROUND(AVG(ExamScore), 2) AS Score\n" + //
+                                "\tSchoolType, \n" + //
+                                "\tROUND(AVG(ExamScore), 2) AS RawExamScore,\n" + //
+                                "\tROUND(AVG(ExamScoreMinMax), 5) AS MinMaxExamScore,\n" + //
+                                "\tROUND(AVG(ExamScoreZ), 5) AS ZScoreExamScore\n" + //
                                 "FROM tmp\n" + //
                                 "GROUP BY \n" + //
                                 "\tGender, \n" + //
-                                "\tBonus\n" + //
-                                "ORDER BY AVG(ExamScore) DESC\n" + //
-                                "LIMIT 5;");
+                                "\tSchoolType \n" + //
+                                "ORDER BY AVG(ExamScore) DESC");
             ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
             int columnsNumber = resultSetMetaData.getColumnCount();
             while (resultSet.next()) {
                 for (int i = 1; i <= columnsNumber; i++) {
-                    if (i > 1) System.out.print(",\t\t");
+                    if (i > 1) System.out.print(",\t");
                     String columnValue = resultSet.getString(i);
                     System.out.print(columnValue + " " + resultSetMetaData.getColumnName(i));
                 }

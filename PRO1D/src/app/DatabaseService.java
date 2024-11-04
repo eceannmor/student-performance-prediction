@@ -22,7 +22,7 @@ public class DatabaseService {
     public static void exitNicely(Connection connection) {
         try {
             connection.close();
-            System.out.println(OK + "connection closed")
+            System.out.println(OK + "connection closed");
         } catch (SQLException e) {
             System.err.println(FATAL + e.toString());
         } finally {
