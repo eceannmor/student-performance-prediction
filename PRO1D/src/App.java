@@ -4,13 +4,14 @@ import java.nio.file.Paths;
 import java.sql.*;
 
 import app.DatabaseService;
+import app.KNN;
 import app.UrlAndCredentials;
 
 public class App {
 
-    public static final String OK     = "\u001B[32m[OK]\u001B[0m\t";
-    // public static final String WARN   = "\u001B[33m[Warn]\u001B[0m\t";  // unused
-    public static final String FATAL  = "\u001B[31m[Fatal]\u001B[0m\t";
+    public static final String OK = "\u001B[32m[OK]\u001B[0m\t";
+    // public static final String WARN = "\u001B[33m[Warn]\u001B[0m\t"; // unused
+    public static final String FATAL = "\u001B[31m[Fatal]\u001B[0m\t";
 
     public static void main(String[] args) {
         /**** Data load and cleanup ****/
@@ -83,43 +84,93 @@ public class App {
                     StandardCharsets.UTF_8);
             System.out.println(OK + statement.executeUpdate(scaling));
 
-            // Sample use of the updated data
-            ResultSet resultSet = statement.executeQuery("WITH tmp AS (\n" + //
-                                "\tSELECT \n" + //
-                                "\t\tGender,\n" + //
-                                "\t\tSchoolType,\n" + //
-                                "\t\tExamScoreMinMax,\n" + //
-                                "\t\tExamScoreZ,\n" + //
-                                "\t\tExamScore\n" + //
-                                "\tFROM StudentPerformanceFactors\n" + //
-                                ")\n" + //
-                                "\n" + //
-                                "SELECT \n" + //
-                                "\tGender,\n" + //
-                                "\tSchoolType, \n" + //
-                                "\tROUND(AVG(ExamScore), 2) AS RawExamScore,\n" + //
-                                "\tROUND(AVG(ExamScoreMinMax), 5) AS MinMaxExamScore,\n" + //
-                                "\tROUND(AVG(ExamScoreZ), 5) AS ZScoreExamScore\n" + //
-                                "FROM tmp\n" + //
-                                "GROUP BY \n" + //
-                                "\tGender, \n" + //
-                                "\tSchoolType \n" + //
-                                "ORDER BY AVG(ExamScore) DESC");
-            ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
-            int columnsNumber = resultSetMetaData.getColumnCount();
-            while (resultSet.next()) {
-                for (int i = 1; i <= columnsNumber; i++) {
-                    if (i > 1) System.out.print(",\t");
-                    String columnValue = resultSet.getString(i);
-                    System.out.print(columnValue + " " + resultSetMetaData.getColumnName(i));
-                }
-                System.out.println("");
-            }
-            resultSet.close();
+            // // Sample use of the updated data
+            // ResultSet resultSet = statement.executeQuery("WITH tmp AS (\n" + //
+            // "\tSELECT \n" + //
+            // "\t\tGender,\n" + //
+            // "\t\tSchoolType,\n" + //
+            // "\t\tExamScoreMinMax,\n" + //
+            // "\t\tExamScoreZ,\n" + //
+            // "\t\tExamScore\n" + //
+            // "\tFROM StudentPerformanceFactors\n" + //
+            // ")\n" + //
+            // "\n" + //
+            // "SELECT \n" + //
+            // "\tGender,\n" + //
+            // "\tSchoolType, \n" + //
+            // "\tROUND(AVG(ExamScore), 2) AS RawExamScore,\n" + //
+            // "\tROUND(AVG(ExamScoreMinMax), 5) AS MinMaxExamScore,\n" + //
+            // "\tROUND(AVG(ExamScoreZ), 5) AS ZScoreExamScore\n" + //
+            // "FROM tmp\n" + //
+            // "GROUP BY \n" + //
+            // "\tGender, \n" + //
+            // "\tSchoolType \n" + //
+            // "ORDER BY AVG(ExamScore) DESC");
+            // ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
+            // int columnsNumber = resultSetMetaData.getColumnCount();
+            // while (resultSet.next()) {
+            // for (int i = 1; i <= columnsNumber; i++) {
+            // if (i > 1) System.out.print(",\t");
+            // String columnValue = resultSet.getString(i);
+            // System.out.print(columnValue + " " + resultSetMetaData.getColumnName(i));
+            // }
+            // System.out.println("");
+            // }
+            // resultSet.close();
             statement.close();
         } catch (Exception e) {
             System.err.println(FATAL + e.toString());
         }
+
+        /**** Data analysis ****/
+
+        /*
+         * Data analysis will consist of 2 stages:
+         * (1): 5% - the predictions of models will be considered successful if it
+         * falls within 5% of the true value, trying to predict the exact grade of the
+         * student's final exam.
+         * (2): Pass/Fail - the predictions of models will be considered successful if
+         * it correctly places the prediction into either the Pass (>=50%) or Fail(<50%)
+         * group of the true value, trying to predict whether the student succeeds in a
+         * final exam.
+         * 
+         * The first stage the models are tested on value accuracy, during the second -
+         * classification accuracy.
+         * 
+         * During each testing stage, all models will be evaluated on the same randomly
+         * selected data.
+         * 
+         * Models and their respective strategy for predicting the final exam score:
+         * 
+         * KNN - with manually tuned value of n, find the closest n students and average
+         * out their exam score, weighted by distance - closer ones contributing more.
+         * 
+         * TODO: model 2
+         * TODO: model 3
+         * 
+         * 
+         * 
+         * 
+         */
+        KNN knn = new KNN();
+
+        try {
+            Statement statement = c.createStatement();
+            ResultSet tmp = statement.executeQuery("SELECT COUNT(*) FROM StudentPerformanceFactors;");
+            tmp.next();
+            int rows = tmp.getInt(1);
+            statement.executeUpdate("ALTER TABLE StudentPerformanceFactors ADD COLUMN IF NOT EXISTS tmp integer;");
+            for (int i = 1; i <= rows; i++) {
+                statement.executeUpdate("UPDATE StudentPerformanceFactors SET tmp = " + Math.floor(Math.random * 100) + " WHERE RecordId = " + i);
+            }
+            ResultSet trainingSet = statement.executeQuery("SELECT * FROM StudentPerformanceFactors WHERE tmp < 80;");
+            ResultSet testSet = statement.executeQuery("SELECT * FROM StudentPerformanceFactors WHERE tmp >= 80;");
+            statement.executeUpdate("ALTER TABLE StudentPerformanceFactors DROP COLUMN tmp;");
+
+        } catch (Exception e) {
+            System.err.println(FATAL + e.toString());
+        }
+
         DatabaseService.exitNicely(c);
     }
 }
