@@ -1,14 +1,17 @@
-# Tutor3_s28021
+# Tutor4_s28021
 A simple data science project, centred around a student performance dataset.<br/>
 The goal is to analyse current conditions of students, and use the dataset together with ML models to predict which students might benefit from additional help or a change of environment.<br/>
 This is a *practice project* in preparation to a diploma thesis, on the same topic, which will include a larger database and more complex analysis.
 
 This project currently includes:
-* Data import and standardisation
-* Sample basic data reports
-* *[Upcoming] Bundled ML models for data analysis*
+* Data import and standardisation scripts
+* Data analysis using:
+    * Multiple linear regression
+    * ~~Least-angle regression~~
+    * ~~Multinominal logical regression~~
+    * ~~Robust regression~~ 
 
-You will need the latest release of Java as well as a local ~~or remote~~ [PostgreSQL database](https://www.postgresql.org/). The drivers for proper database communication and the sample data are already included.
+You will need the latest release of [Java](https://www.java.com/download), [python](https://www.python.org/downloads/), as well as a local ~~or remote~~ [PostgreSQL database](https://www.postgresql.org/). The drivers for proper database communication and the sample data are already included.
 
 ## Usage
 * Clone this repository
