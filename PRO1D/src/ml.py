@@ -1,11 +1,13 @@
-import sys
-import subprocess
-import pkg_resources
+# import sys
+# import subprocess
+# import pkg_resources
 import time
+
+# unused
 
 # # check for any missing dependencies, install if needed
 # # https://stackoverflow.com/questions/44210656/how-to-check-if-a-module-is-installed-in-python-and-if-not-install-it-within-t
-# required = {'numpy', 'sklearn'}
+# required = {'numpy', 'pandas', 'sklearn'}
 # installed = {pkg.key for pkg in pkg_resources.working_set}
 # missing = required - installed
 
@@ -32,7 +34,6 @@ import matplotlib.pyplot as plt
 
 # data load
 f = open("data/data.csv")
-# f.readline()  # skip the headers
 data = pandas.read_csv(f)
 # standardising the data that is kept in string format(classes) for SQL reports' sake 
 data = data.replace({
@@ -55,7 +56,9 @@ y = data.iloc[:,-3:-2] # only predicts the numeric exam score [1-100], examscore
 X = data.iloc[:,:-3]
 # random seed to split the data
 import random
-seed = random.randint(1, 100000)
+seed = random.randint(1, 999)
+# fixing the seed for the SVM later
+np.random.seed(seed)
 print(f'Dataset split seed: {seed}')
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20, random_state=seed)
 # for plotting
@@ -66,7 +69,7 @@ y_test_array = y_test.to_numpy()
 # Chosen as a baseline - the most obvious algorithm to predict the scores
 neighbors = 9
 start = time.time()
-print(f'Fitting KNN Regression model\nNumber of neighbors:\t{neighbors}')
+print(f'Fitting KNN Regression model\nNumber of neighbors: {neighbors}')
 neigh = KNeighborsRegressor(n_neighbors=neighbors)
 neigh.fit(X_train, y_train)
 y_pred_knn = pandas.DataFrame(neigh.predict(X_test), columns = ['examscore'])
@@ -88,7 +91,7 @@ print(f'Finished fitting. Took {time.time() - start} seconds')
 # Support Vector Regression
 # Takes longer to fit, but has greater *potential* accuracy. Has larger variation between runs
 start = time.time()
-print(f'Fitting Support Vector Regression model')
+print(f'Fitting Support Vector Regression model\nSeed: {seed}')
 svr = svm.LinearSVR()
 svr.fit(X_train, y_train)
 y_pred_svr = svr.predict(X_test)
@@ -106,6 +109,7 @@ r2_knn = r2_score(y_test, y_pred_knn)
 r2_ransac = r2_score(y_test, y_pred_ransac)
 r2_svr = r2_score(y_test, y_pred_svr)
 
+# unused
 # D-squared metric, best is 1.0, bigger is better
 d2_knn = d2_absolute_error_score(y_test, y_pred_knn)
 d2_ransac = d2_absolute_error_score(y_test, y_pred_ransac)
@@ -145,15 +149,16 @@ errors_r2 = [r2_knn, r2_ransac, r2_svr]
 errors_me = [me_knn, me_ransac, me_svr]
 colours = ['blue', 'orange', 'green']
 
-ax4.bar(models, errors_mse, 0.75, color=colours, label='Mean Squared Error')
-ax4.set(ylabel='Mean Squared Error')
+ax4.bar([a+' '+str(np.round(b, 4)) for a,b in zip(models,errors_mse)], errors_mse, 0.75, color=colours, label='Mean Squared Error')
+ax4.set(ylabel='Mean Squared Error, smaller is better')
 
-ax5.bar(models, errors_r2, 0.75, color=colours, label='R-squared')
-ax5.set(ylabel='R-squared')
+ax5.bar([a+' '+str(np.round(b, 4)) for a,b in zip(models,errors_r2)], errors_r2, 0.75, color=colours, label='R-squared')
+ax5.set(ylabel='R-squared, bigger is better')
 
-ax6.bar(models, errors_me, 0.75, color=colours, label='Maximum Error')
-ax6.set(ylabel='Maximum Error')
+ax6.bar([a+' '+str(np.round(b, 4)) for a,b in zip(models,errors_me)], errors_me, 0.75, color=colours, label='Maximum Error')
+ax6.set(ylabel='Maximum Error, smaller is better')
 
 fig.set_figheight(9)
 fig.set_figwidth(16)
+fig.suptitle(f'Model comparison\nRandom seed: {seed}')
 plt.show()
