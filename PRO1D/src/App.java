@@ -4,7 +4,6 @@ import java.nio.file.Paths;
 import java.sql.*;
 
 import app.DatabaseService;
-import app.KNN;
 import app.UrlAndCredentials;
 
 public class App {
@@ -83,16 +82,17 @@ public class App {
             String scaling = new String(Files.readAllBytes(Paths.get("data\\scaling.sql")),
                     StandardCharsets.UTF_8);
             System.out.println(OK + statement.executeUpdate(scaling));
-            ResultSet tmp = statement.executeQuery("SELECT COUNT(*) FROM StudentPerformanceFactors;");
-            tmp.next();
-            int rows = tmp.getInt(1);
-            statement.executeUpdate("ALTER TABLE StudentPerformanceFactors ADD COLUMN IF NOT EXISTS tmp integer;");
-            for (int i = 1; i <= rows; i++) {
-                statement.executeUpdate("UPDATE StudentPerformanceFactors SET tmp = " + Math.floor(Math.random * 100) + " WHERE RecordId = " + i);
-            }
-            statement.executeQuery("COPY (SELECT * FROM StudentPerformanceFactors WHERE tmp < 80) TO '" + System.getProperty("user.dir") + "\\data\\trainingSet.csv'" + " DELIMITER ',' CSV HEADER;");
-            statement.executeQuery("COPY (SELECT * FROM StudentPerformanceFactors WHERE tmp >= 80) TO '" + System.getProperty("user.dir") + "\\data\\testSet.csv'" + " DELIMITER ',' CSV HEADER;");
-            statement.executeUpdate("ALTER TABLE StudentPerformanceFactors DROP COLUMN tmp;");
+            // ResultSet tmp = statement.executeQuery("SELECT COUNT(*) FROM StudentPerformanceFactors;");
+            // tmp.next();
+            // int rows = tmp.getInt(1);
+            // statement.executeUpdate("ALTER TABLE StudentPerformanceFactors ADD COLUMN IF NOT EXISTS tmp integer;");
+            // for (int i = 1; i <= rows; i++) {
+            //     statement.executeUpdate("UPDATE StudentPerformanceFactors SET tmp = " + Math.floor(Math.random * 100) + " WHERE RecordId = " + i);
+            // }
+            // statement.executeUpdate("COPY (SELECT * FROM StudentPerformanceFactors WHERE tmp < 80) TO '" + System.getProperty("user.dir") + "\\data\\trainingSet.csv'" + " DELIMITER ',' CSV HEADER;");
+            // statement.executeUpdate("COPY (SELECT * FROM StudentPerformanceFactors WHERE tmp >= 80) TO '" + System.getProperty("user.dir") + "\\data\\testSet.csv'" + " DELIMITER ',' CSV HEADER;");
+            // statement.executeUpdate("ALTER TABLE StudentPerformanceFactors DROP COLUMN tmp;");
+            statement.executeUpdate("COPY (SELECT * FROM StudentPerformanceFactors) TO '" + System.getProperty("user.dir") + "\\data\\data.csv'" + " DELIMITER ',' CSV HEADER;");
             statement.close();
         } catch (Exception e) {
             System.err.println(FATAL + e.toString());
