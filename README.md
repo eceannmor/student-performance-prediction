@@ -19,11 +19,11 @@ You will need the latest release of [Java](https://www.java.com/download), [pyth
     git clone https://github.com/PROJ-D-2024/Tutor4_s28021.git
     cd Tutor4_s28021
     ```
-* **(:heavy_exclamation_mark: This step is optional in the current release)** <br/>Run a [PostgreSQL database instance](https://www.postgresql.org/) to use as the final storage for the data. 
+* **( :heavy_exclamation_mark: This step is optional in the current release)** <br/>Run a [PostgreSQL database instance](https://www.postgresql.org/) to use as the final storage for the data. 
 
   > :warning: Currently only **non-containerised**, **localhost** PostgreSQL databases are supported.<br/>
   `TODO`: replace server side `COPY` with client side `\copy`.
-* **(:heavy_exclamation_mark: This step is optional in the current release)** <br/>Copy `sample_config` as `database.cfg` into `/src`:
+* **( :heavy_exclamation_mark: This step is optional in the current release)** <br/>Copy `sample_config` as `database.cfg` into `/src`:
     * Windows: `copy sample_config.cfg ./PRO1D/scr/database.cfg -a`
     * Linux: `cp sample_config.cfg ./PRO1D/src/database.cfg`
 
