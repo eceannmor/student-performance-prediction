@@ -1,26 +1,29 @@
-# Tutor3_s28021
+# Tutor4_s28021
 A simple data science project, centred around a student performance dataset.<br/>
-The goal is to analyse current conditions of students, and use the dataset together with ML models to predict which students might benefit from additional help or a change of environment.<br/>
+The goal is to analyse current conditions of students, and use the dataset together with different ML models to predict which students might benefit from additional help or a change of environment.<br/>
+Current version of the project includes final exam score prediction based on students' factors.<br/>
 This is a *practice project* in preparation to a diploma thesis, on the same topic, which will include a larger database and more complex analysis.
 
 This project currently includes:
-* Data import and standardisation
-* Sample basic data reports
-* *[Upcoming] Bundled ML models for data analysis*
+* Data import and standardisation scripts
+* Data analysis using:
+    * Random Sample Consensus
+    * K-Nearest-Neighbours
+    * Support Vector Machine
 
-You will need the latest release of Java as well as a local ~~or remote~~ [PostgreSQL database](https://www.postgresql.org/). The drivers for proper database communication and the sample data are already included.
+You will need the latest release of [Java](https://www.java.com/download), [python](https://www.python.org/downloads/), as well as a local ~~or remote~~ [PostgreSQL database](https://www.postgresql.org/). The drivers for proper database communication and the sample data are already included.
 
 ## Usage
 * Clone this repository
     ```console
-    git clone https://github.com/PROJ-D-2024/Tutor3_s28021.git
-    cd Tutor3_s28021
+    git clone https://github.com/PROJ-D-2024/Tutor4_s28021.git
+    cd Tutor4_s28021
     ```
-* Run a [PostgreSQL database instance](https://www.postgresql.org/) to use as the final storage for the data. 
+* **(:heavy_exclamation_mark: This step is optional in the current release)** <br/>Run a [PostgreSQL database instance](https://www.postgresql.org/) to use as the final storage for the data. 
 
   > :warning: Currently only **non-containerised**, **localhost** PostgreSQL databases are supported.<br/>
   `TODO`: replace server side `COPY` with client side `\copy`.
-* Copy `sample_config` as `database.cfg` into `/src`:
+* **(:heavy_exclamation_mark: This step is optional in the current release)** <br/>Copy `sample_config` as `database.cfg` into `/src`:
     * Windows: `copy sample_config.cfg ./PRO1D/scr/database.cfg -a`
     * Linux: `cp sample_config.cfg ./PRO1D/src/database.cfg`
 

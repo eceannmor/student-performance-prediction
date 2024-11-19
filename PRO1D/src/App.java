@@ -8,9 +8,9 @@ import app.UrlAndCredentials;
 
 public class App {
 
-    public static final String OK     = "\u001B[32m[OK]\u001B[0m\t";
-    // public static final String WARN   = "\u001B[33m[Warn]\u001B[0m\t";  // unused
-    public static final String FATAL  = "\u001B[31m[Fatal]\u001B[0m\t";
+    public static final String OK = "\u001B[32m[OK]\u001B[0m\t";
+    // public static final String WARN = "\u001B[33m[Warn]\u001B[0m\t"; // unused
+    public static final String FATAL = "\u001B[31m[Fatal]\u001B[0m\t";
 
     public static void main(String[] args) {
         /**** Data load and cleanup ****/
@@ -82,40 +82,17 @@ public class App {
             String scaling = new String(Files.readAllBytes(Paths.get("data\\scaling.sql")),
                     StandardCharsets.UTF_8);
             System.out.println(OK + statement.executeUpdate(scaling));
-
-            // Sample use of the updated data
-            ResultSet resultSet = statement.executeQuery("WITH tmp AS (\n" + //
-                                "\tSELECT \n" + //
-                                "\t\tGender,\n" + //
-                                "\t\tSchoolType,\n" + //
-                                "\t\tExamScoreMinMax,\n" + //
-                                "\t\tExamScoreZ,\n" + //
-                                "\t\tExamScore\n" + //
-                                "\tFROM StudentPerformanceFactors\n" + //
-                                ")\n" + //
-                                "\n" + //
-                                "SELECT \n" + //
-                                "\tGender,\n" + //
-                                "\tSchoolType, \n" + //
-                                "\tROUND(AVG(ExamScore), 2) AS RawExamScore,\n" + //
-                                "\tROUND(AVG(ExamScoreMinMax), 5) AS MinMaxExamScore,\n" + //
-                                "\tROUND(AVG(ExamScoreZ), 5) AS ZScoreExamScore\n" + //
-                                "FROM tmp\n" + //
-                                "GROUP BY \n" + //
-                                "\tGender, \n" + //
-                                "\tSchoolType \n" + //
-                                "ORDER BY AVG(ExamScore) DESC");
-            ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
-            int columnsNumber = resultSetMetaData.getColumnCount();
-            while (resultSet.next()) {
-                for (int i = 1; i <= columnsNumber; i++) {
-                    if (i > 1) System.out.print(",\t");
-                    String columnValue = resultSet.getString(i);
-                    System.out.print(columnValue + " " + resultSetMetaData.getColumnName(i));
-                }
-                System.out.println("");
-            }
-            resultSet.close();
+            // ResultSet tmp = statement.executeQuery("SELECT COUNT(*) FROM StudentPerformanceFactors;");
+            // tmp.next();
+            // int rows = tmp.getInt(1);
+            // statement.executeUpdate("ALTER TABLE StudentPerformanceFactors ADD COLUMN IF NOT EXISTS tmp integer;");
+            // for (int i = 1; i <= rows; i++) {
+            //     statement.executeUpdate("UPDATE StudentPerformanceFactors SET tmp = " + Math.floor(Math.random * 100) + " WHERE RecordId = " + i);
+            // }
+            // statement.executeUpdate("COPY (SELECT * FROM StudentPerformanceFactors WHERE tmp < 80) TO '" + System.getProperty("user.dir") + "\\data\\trainingSet.csv'" + " DELIMITER ',' CSV HEADER;");
+            // statement.executeUpdate("COPY (SELECT * FROM StudentPerformanceFactors WHERE tmp >= 80) TO '" + System.getProperty("user.dir") + "\\data\\testSet.csv'" + " DELIMITER ',' CSV HEADER;");
+            // statement.executeUpdate("ALTER TABLE StudentPerformanceFactors DROP COLUMN tmp;");
+            statement.executeUpdate("COPY (SELECT * FROM StudentPerformanceFactors) TO '" + System.getProperty("user.dir") + "\\data\\data.csv'" + " DELIMITER ',' CSV HEADER;");
             statement.close();
         } catch (Exception e) {
             System.err.println(FATAL + e.toString());
