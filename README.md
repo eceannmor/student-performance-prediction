@@ -1,4 +1,4 @@
-# Tutor4_s28021
+# Student performance predition
 A simple data science project, centred around a student performance dataset.<br/>
 The goal is to analyse current conditions of students, and use the dataset together with different ML models to predict which students might benefit from additional help or a change of environment.<br/>
 Current version of the project includes final exam score prediction based on students' factors.<br/>
@@ -12,6 +12,18 @@ This project currently includes:
     * Support Vector Machine
 
 You will need the latest release of [Java](https://www.java.com/download), [python](https://www.python.org/downloads/), as well as a local ~~or remote~~ [PostgreSQL database](https://www.postgresql.org/). The drivers for proper database communication and the sample data are already included.
+
+## Prediction performance
+![performance analysis chart](analysis%20chart.png)
+**Data size:** 32 intependent features, 3 dependent features (only 1 used for prediction), 6608 observations (split 80-20)
+
+Random sample consensus was chosen for its ability to handle outliers better than other methods.<br/>
+Best achived metrics:
+* **Mean Squared Error**: 2.8230
+* **R<sup>2</sup>**: 0.8007
+* **Maximum Error**: 30.1322
+
+The result can be replicated by manually setting the random seed to **598**.
 
 ## Usage
 * Clone this repository
