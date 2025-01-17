@@ -28,8 +28,8 @@ The result can be replicated by manually setting the random seed to **598**.
 ## Usage
 * Clone this repository
     ```console
-    git clone https://github.com/PROJ-D-2024/Tutor4_s28021.git
-    cd Tutor4_s28021
+    git clone https://github.com/eceannmor/student-performance-prediction.git
+    cd student-performance-prediction
     ```
 * **( :heavy_exclamation_mark: This step is optional in the current release)** <br/>Run a [PostgreSQL database instance](https://www.postgresql.org/) to use as the final storage for the data. 
 
