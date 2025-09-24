@@ -54,4 +54,3 @@ The result can be replicated by manually setting the random seed to **598**.
 ## License
 Free to use for personal / educational cases. <br/> 
 Do not reupload or submit as you own. Your professor will know.<br/>
-Unsure? Ask » ekreceannmor@gmail.com
